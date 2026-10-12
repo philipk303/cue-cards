@@ -47,6 +47,7 @@
 // one "- " bullet per talking point. The pauses list and CUT SLIDE sections are skipped.
 const OUTLINE = 'talking-points-outline.md';
 const STORE = 'cue-cards-place';
+const RATE = 2.25;   // speaking speed; 1 is the voice's normal pace
 // Default: the page speaks each cue itself, for use with TalkBack off.
 // Add ?voice=talkback to stay silent and let the screen reader speak instead.
 const pageVoice = new URLSearchParams(location.search).get('voice') !== 'talkback';
@@ -76,7 +77,9 @@ function parse(md) {
 function say(text) {
   if (pageVoice && 'speechSynthesis' in window) {
     speechSynthesis.cancel();
-    speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = RATE;
+    speechSynthesis.speak(u);
   }
   // Clear first so the same text is announced again on Repeat.
   const el = document.getElementById('say');
